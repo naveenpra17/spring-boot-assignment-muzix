@@ -1,6 +1,9 @@
 package com.stackroute.trackservice.controller;
 
 import com.stackroute.trackservice.domain.Track;
+import com.stackroute.trackservice.exceptions.ErrorWithConnectingToTheDataBase;
+import com.stackroute.trackservice.exceptions.TrackNotAvailable;
+import com.stackroute.trackservice.exceptions.UserAlreadyExistsException;
 import com.stackroute.trackservice.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,8 +39,21 @@ public class TrackController {
      */
     @PostMapping("track")//this is used for posting data //this a method level mapping
     public ResponseEntity<?> saveTrack(@RequestBody Track track) {
-        Track track1 = trackService.saveTrack(track);
-        return new ResponseEntity<>(track1, HttpStatus.OK);
+        ResponseEntity responseEntity;
+        try {
+            Track track1 = trackService.saveTrack(track);
+           responseEntity=new ResponseEntity<> (track1, HttpStatus.OK);
+        }catch (UserAlreadyExistsException ex){
+            responseEntity=new ResponseEntity<>(ex.getMessage(), HttpStatus.OK);
+            ex.printStackTrace();
+        }
+        catch (ErrorWithConnectingToTheDataBase ecx){
+            responseEntity=new ResponseEntity<>(ecx.getMessage(),HttpStatus.OK);
+            ecx.printStackTrace();
+        }
+
+
+        return responseEntity;
     }
 
     /**
@@ -46,8 +62,19 @@ public class TrackController {
      */
     @GetMapping("track/{id}")//this for get request
     public ResponseEntity<?> getTrack(@PathVariable int id) {
-        Track track1 = trackService.getTrackById(id);
-        return new ResponseEntity<>(track1, HttpStatus.OK);
+        Track track1;
+        ResponseEntity responseEntity;
+        try{
+            track1 = trackService.getTrackById(id);
+            responseEntity=new ResponseEntity<>(track1,HttpStatus.OK);
+
+        }
+        catch (TrackNotAvailable tx){
+            responseEntity=new ResponseEntity<>(tx.getMessage(),HttpStatus.NOT_FOUND);
+            tx.printStackTrace();
+        }
+
+        return responseEntity;
 
     }
 
@@ -56,9 +83,18 @@ public class TrackController {
      */
     @GetMapping("track")
     public ResponseEntity<?> getAllTrack() {
-        List<Track> list = new ArrayList<>();
-        list = trackService.getAllTracks();
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        ResponseEntity responseEntity;
+        try {
+            List<Track> list = new ArrayList<>();
+            list = trackService.getAllTracks();
+            responseEntity=new ResponseEntity<>(list,HttpStatus.OK);
+        }catch (Exception ex)
+        {
+            responseEntity=new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            ex.printStackTrace();
+        }
+
+        return responseEntity;
 
     }
 
@@ -68,9 +104,14 @@ public class TrackController {
      */
     @DeleteMapping("track/{id}")//this is used for delete request
     public ResponseEntity<?> deleteById(@PathVariable("id") int id) {
-        System.out.println("khsdgusasgyd");
-        String str = trackService.deleteTrackById(id);
-        return new ResponseEntity<>(str, HttpStatus.OK);
+        ResponseEntity responseEntity;
+        try{
+            String str = trackService.deleteTrackById(id);
+            responseEntity=new ResponseEntity(str,HttpStatus.OK);
+        }catch(TrackNotAvailable tx){
+            responseEntity=new ResponseEntity(tx.getMessage(),HttpStatus.NOT_FOUND);
+        }
+        return responseEntity;
     }
 
     /**
@@ -80,7 +121,14 @@ public class TrackController {
      */
     @PutMapping("track/{id}")
     public ResponseEntity<?> updateById(@PathVariable int id,@RequestBody Track trackToBeUpdated) {
-        Track track = trackService.updateTrack(id,trackToBeUpdated);
-        return new ResponseEntity<>(track, HttpStatus.OK);
+        ResponseEntity responseEntity;
+        try{
+            Track track = trackService.updateTrack(id,trackToBeUpdated);
+            responseEntity=new ResponseEntity(track,HttpStatus.OK);
+        }catch (TrackNotAvailable tx){
+            responseEntity=new ResponseEntity(tx.getMessage(),HttpStatus.NOT_FOUND);
+        }
+
+        return responseEntity;
     }
 }
