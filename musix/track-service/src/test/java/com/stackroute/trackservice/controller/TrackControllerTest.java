@@ -2,7 +2,7 @@ package com.stackroute.trackservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stackroute.trackservice.domain.Track;
-import com.stackroute.trackservice.exceptions.UserAlreadyExistsException;
+import com.stackroute.trackservice.exceptions.TrackAlreadyExistsException;
 import com.stackroute.trackservice.service.TrackService;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -71,7 +70,7 @@ public class TrackControllerTest {
 
     @Test
     public void saveTrackFailure() throws  Exception {
-        when(trackService.saveTrack((Track)any())).thenThrow(UserAlreadyExistsException.class);
+        when(trackService.saveTrack((Track)any())).thenThrow(TrackAlreadyExistsException.class);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/track/")
                 .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
                 .andExpect(MockMvcResultMatchers.status().isConflict())

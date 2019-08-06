@@ -1,13 +1,10 @@
 package com.stackroute.trackservice.service;
 
 import com.stackroute.trackservice.domain.Track;
-import com.stackroute.trackservice.exceptions.ErrorWithConnectingToTheDataBase;
 import com.stackroute.trackservice.exceptions.TrackNotAvailable;
-import com.stackroute.trackservice.exceptions.UserAlreadyExistsException;
+import com.stackroute.trackservice.exceptions.TrackAlreadyExistsException;
 import com.stackroute.trackservice.repository.TrackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -42,13 +39,13 @@ public class TrackServiceImpl implements TrackService {
      * @return this track1 is the Track object returned by trackrepository.save()
      */
     @Override
-    public Track saveTrack(Track track) throws UserAlreadyExistsException {
+    public Track saveTrack(Track track) throws TrackAlreadyExistsException {
             if(trackRepository.existsById(track.getId()))
-                throw new UserAlreadyExistsException("user already exists");
+                throw new TrackAlreadyExistsException("user already exists");
 
           Track track1=trackRepository.save(track);
             if(track1==null)
-                throw new UserAlreadyExistsException("No response from the database");
+                throw new TrackAlreadyExistsException("No response from the database");
           return track1;
     }
 

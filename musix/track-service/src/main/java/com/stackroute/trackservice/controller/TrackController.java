@@ -1,21 +1,16 @@
 package com.stackroute.trackservice.controller;
 
 import com.stackroute.trackservice.domain.Track;
-import com.stackroute.trackservice.exceptions.ErrorWithConnectingToTheDataBase;
 import com.stackroute.trackservice.exceptions.TrackNotAvailable;
-import com.stackroute.trackservice.exceptions.UserAlreadyExistsException;
+import com.stackroute.trackservice.exceptions.TrackAlreadyExistsException;
 import com.stackroute.trackservice.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController //this tells the dispatcher servlet that this class is an rest controller class
 @RequestMapping(value = "api/v1/")//this a class level mapping for http requests
@@ -42,7 +37,7 @@ public class TrackController {
      * @return returns the track with status
      */
     @PostMapping("track")//this is used for posting data //this a method level mapping
-    public ResponseEntity<?> saveTrack(@RequestBody Track track) throws UserAlreadyExistsException {
+    public ResponseEntity<?> saveTrack(@RequestBody Track track) throws TrackAlreadyExistsException {
         ResponseEntity responseEntity;
         System.out.println(track);
         Track track1 = null;

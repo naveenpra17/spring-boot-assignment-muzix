@@ -1,10 +1,8 @@
 package com.stackroute.trackservice.service;
 
 import com.stackroute.trackservice.domain.Track;
-import com.stackroute.trackservice.exceptions.ErrorWithConnectingToTheDataBase;
 import com.stackroute.trackservice.exceptions.TrackNotAvailable;
-import com.stackroute.trackservice.exceptions.UserAlreadyExistsException;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.stackroute.trackservice.exceptions.TrackAlreadyExistsException;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +13,7 @@ import java.util.List;
 @Profile("mainservice")
 public class TrackDummyServiceImpl implements TrackService {
     @Override
-    public Track saveTrack(Track track) throws UserAlreadyExistsException {
+    public Track saveTrack(Track track) throws TrackAlreadyExistsException {
         return null;
     }
 

@@ -1,19 +1,17 @@
 package com.stackroute.trackservice.service;
 
 import com.stackroute.trackservice.domain.Track;
-import com.stackroute.trackservice.exceptions.ErrorWithConnectingToTheDataBase;
 import com.stackroute.trackservice.exceptions.TrackNotAvailable;
-import com.stackroute.trackservice.exceptions.UserAlreadyExistsException;
+import com.stackroute.trackservice.exceptions.TrackAlreadyExistsException;
 
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * this is an interface of service class which has service methods
  */
 public interface TrackService {
-    public Track saveTrack(Track track) throws UserAlreadyExistsException;
+    public Track saveTrack(Track track) throws TrackAlreadyExistsException;
     public Track getTrackById(int id) throws TrackNotAvailable;
     public List<Track> getAllTracks();
     public String deleteTrackById(int id) throws TrackNotAvailable;
