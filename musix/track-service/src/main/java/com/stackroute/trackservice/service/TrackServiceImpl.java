@@ -56,12 +56,15 @@ public class TrackServiceImpl implements TrackService {
     @Override
     public Track getTrackById(int id) throws TrackNotAvailable {
 
-        if(trackRepository.findById(id).isEmpty()) {
-          throw new TrackNotAvailable("track not available");
-        }
-        Track track = trackRepository.findById(id).get();
+        if(trackRepository.existsById(id)) {
+            Track track = trackRepository.findById(id).get();
 
-        return track;
+          return track;
+        }
+        else
+        {
+            throw  new TrackNotAvailable("track not available");
+        }
     }
 
     /**

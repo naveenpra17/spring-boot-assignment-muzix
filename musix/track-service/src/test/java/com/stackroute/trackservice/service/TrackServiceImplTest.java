@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -90,12 +91,22 @@ public class TrackServiceImplTest {
         Assert.assertEquals(list, userlist);
     }
 
+    @Test
+    public void getTrackById() throws TrackNotAvailable{
+        when(trackRepository.existsById(101)).thenReturn(true);
+        when(trackRepository.findById(101)).thenReturn((Optional.of(track)));
+
+        Track track1=trackService.getTrackById(101);
+        Assert.assertEquals(track,track1);
+    }
+
 //    @Test
-//    public void getTrackById() throws TrackNotAvailable{
+//    public void deleteTrackById() throws TrackNotAvailable{
+//        when(trackRepository.findById(101)).thenReturn(Optional.of(track));
 //
-//        trackRepository.save(track);
-//        when(trackRepository.findById(track.getId()).thenReturn(track));
+//       Track deleteTrack=trackService.getTrackById(101);
 //
+//        Assert.assertEquals(track,deleteTrack);
 //    }
 }
 

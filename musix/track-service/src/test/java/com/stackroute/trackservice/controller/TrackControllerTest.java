@@ -2,6 +2,7 @@ package com.stackroute.trackservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stackroute.trackservice.domain.Track;
+import com.stackroute.trackservice.exceptions.GlobalException;
 import com.stackroute.trackservice.exceptions.TrackAlreadyExistsException;
 import com.stackroute.trackservice.service.TrackService;
 import org.junit.Before;
@@ -45,7 +46,7 @@ public class TrackControllerTest {
     public void setUp() {
 
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(trackController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(trackController).setControllerAdvice(new GlobalException()).build();
         track = new Track();
 
         track.setTrack("song");
