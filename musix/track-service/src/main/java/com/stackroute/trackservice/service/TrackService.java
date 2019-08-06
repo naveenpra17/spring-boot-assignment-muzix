@@ -13,7 +13,7 @@ import java.util.Optional;
  * this is an interface of service class which has service methods
  */
 public interface TrackService {
-    public Track saveTrack(Track track) throws UserAlreadyExistsException, ErrorWithConnectingToTheDataBase;
+    public Track saveTrack(Track track) throws UserAlreadyExistsException;
     public Track getTrackById(int id) throws TrackNotAvailable;
     public List<Track> getAllTracks();
     public String deleteTrackById(int id) throws TrackNotAvailable;

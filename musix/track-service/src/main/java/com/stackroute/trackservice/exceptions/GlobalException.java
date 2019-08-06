@@ -22,6 +22,6 @@ public class GlobalException extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<Object> userAlreadyExistsException(final UserAlreadyExistsException ex){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.OK);
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.CONFLICT);
     }
 }

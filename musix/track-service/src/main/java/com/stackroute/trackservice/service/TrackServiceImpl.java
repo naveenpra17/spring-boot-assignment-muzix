@@ -42,13 +42,13 @@ public class TrackServiceImpl implements TrackService {
      * @return this track1 is the Track object returned by trackrepository.save()
      */
     @Override
-    public Track saveTrack(Track track) throws UserAlreadyExistsException,ErrorWithConnectingToTheDataBase {
+    public Track saveTrack(Track track) throws UserAlreadyExistsException {
             if(trackRepository.existsById(track.getId()))
                 throw new UserAlreadyExistsException("user already exists");
 
           Track track1=trackRepository.save(track);
             if(track1==null)
-                throw new ErrorWithConnectingToTheDataBase("No response from the database");
+                throw new UserAlreadyExistsException("No response from the database");
           return track1;
     }
 

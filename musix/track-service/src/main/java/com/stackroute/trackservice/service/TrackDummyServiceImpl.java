@@ -15,7 +15,7 @@ import java.util.List;
 @Profile("mainservice")
 public class TrackDummyServiceImpl implements TrackService {
     @Override
-    public Track saveTrack(Track track) throws UserAlreadyExistsException, ErrorWithConnectingToTheDataBase {
+    public Track saveTrack(Track track) throws UserAlreadyExistsException {
         return null;
     }
 

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController //this tells the dispatcher servlet that this class is an rest controller class
-@RequestMapping("api/v1/")//this a class level mapping for http requests
+@RequestMapping(value = "api/v1/")//this a class level mapping for http requests
 public class TrackController {
 
     @Autowired
@@ -30,7 +30,7 @@ public class TrackController {
 
     /**
      * @param trackService this is an object reference of TrackService class and we are telling to the
-     *      *                        spring to provide the object of TrackService object using @autowired annotation
+     *                     *                        spring to provide the object of TrackService object using @autowired annotation
      */
     @Autowired
     public TrackController(TrackService trackService) {
@@ -42,12 +42,13 @@ public class TrackController {
      * @return returns the track with status
      */
     @PostMapping("track")//this is used for posting data //this a method level mapping
-    public ResponseEntity<?> saveTrack(@RequestBody Track track) throws UserAlreadyExistsException,ErrorWithConnectingToTheDataBase {
+    public ResponseEntity<?> saveTrack(@RequestBody Track track) throws UserAlreadyExistsException {
         ResponseEntity responseEntity;
-
-            Track track1 = trackService.saveTrack(track);
-           responseEntity=new ResponseEntity<> (track1, HttpStatus.OK);
-            return responseEntity;
+        System.out.println(track);
+        Track track1 = null;
+        track1 = trackService.saveTrack(track);
+        responseEntity = new ResponseEntity<Track>(track1, HttpStatus.CREATED);
+        return responseEntity;
     }
 
     /**
@@ -59,8 +60,8 @@ public class TrackController {
         Track track1;
         ResponseEntity responseEntity;
 //        try{
-            track1 = trackService.getTrackById(id);
-            responseEntity=new ResponseEntity<>(track1,HttpStatus.OK);
+        track1 = trackService.getTrackById(id);
+        responseEntity = new ResponseEntity(track1, HttpStatus.CONFLICT);
 
 //        }
 //        catch (TrackNotAvailable tx){
@@ -76,12 +77,12 @@ public class TrackController {
      * @return a list of tracks is returned
      */
     @GetMapping("track")
-    public ResponseEntity<?> getAllTrack()  {
+    public ResponseEntity<?> getAllTrack() {
         ResponseEntity responseEntity;
 //        try {
-            List<Track> list = new ArrayList<>();
-            list = trackService.getAllTracks();
-            responseEntity=new ResponseEntity<>(list,HttpStatus.OK);
+        List<Track> list = new ArrayList<>();
+        list = trackService.getAllTracks();
+        responseEntity = new ResponseEntity<>(list, HttpStatus.OK);
 //        }catch (Exception ex)
 //        {
 //            responseEntity=new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -100,8 +101,8 @@ public class TrackController {
     public ResponseEntity<?> deleteById(@PathVariable("id") int id) throws TrackNotAvailable {
         ResponseEntity responseEntity;
 //        try{
-            String str = trackService.deleteTrackById(id);
-            responseEntity=new ResponseEntity(str,HttpStatus.OK);
+        String str = trackService.deleteTrackById(id);
+        responseEntity = new ResponseEntity(str, HttpStatus.OK);
 //        }catch(TrackNotAvailable tx){
 //            responseEntity=new ResponseEntity(tx.getMessage(),HttpStatus.NOT_FOUND);
 //        }
@@ -109,16 +110,16 @@ public class TrackController {
     }
 
     /**
-     * @param id based on the id value the track will be slected for updating
+     * @param id               based on the id value the track will be slected for updating
      * @param trackToBeUpdated this the name of the track which will be upadted
      * @return updated tracl
      */
     @PutMapping("track/{id}")
-    public ResponseEntity<?> updateById(@PathVariable int id,@RequestBody Track trackToBeUpdated) throws TrackNotAvailable {
+    public ResponseEntity<?> updateById(@PathVariable int id, @RequestBody Track trackToBeUpdated) throws TrackNotAvailable {
         ResponseEntity responseEntity;
 //        try{
-            Track track = trackService.updateTrack(id,trackToBeUpdated);
-            responseEntity=new ResponseEntity(track,HttpStatus.OK);
+        Track track = trackService.updateTrack(id, trackToBeUpdated);
+        responseEntity = new ResponseEntity(track, HttpStatus.OK);
 //        }catch (TrackNotAvailable tx){
 //            responseEntity=new ResponseEntity(tx.getMessage(),HttpStatus.NOT_FOUND);
 //        }
@@ -127,11 +128,10 @@ public class TrackController {
     }
 
     @GetMapping("tracks/{name}")
-    public ResponseEntity<?> getByName(@PathVariable String name) throws TrackNotAvailable
-    {
-        List<Track> track=trackService.getByName(name);
-        return new ResponseEntity<>(track,HttpStatus.OK);
+    public ResponseEntity<?> getByName(@PathVariable String name) throws TrackNotAvailable {
+        List<Track> track = trackService.getByName(name);
+        return new ResponseEntity<>(track, HttpStatus.OK);
     }
 
 
-    }
+}
