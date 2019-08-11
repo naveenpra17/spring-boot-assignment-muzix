@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stackroute.trackservice.domain.Track;
 import com.stackroute.trackservice.exceptions.GlobalException;
 import com.stackroute.trackservice.exceptions.TrackAlreadyExistsException;
+import com.stackroute.trackservice.exceptions.TrackNotAvailableException;
 import com.stackroute.trackservice.service.TrackService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest
@@ -58,38 +60,119 @@ public class TrackControllerTest {
         list.add(track);
     }
 
+    @After
+    public void tearDown() {
+        list=null;
+        track = null;
+    }
+
+
     @Test
-    public void saveTrack() throws Exception {
+    public void givenMethodWillSaveTheTrack() throws Exception {
         when(trackService.saveTrack(any())).thenReturn(track);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/track")
                 .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andDo(MockMvcResultHandlers.print());
-
+        verify(trackService, times(1)).saveTrack(track);
 
     }
 
     @Test
-    public void saveTrackFailure() throws  Exception {
-        when(trackService.saveTrack((Track)any())).thenThrow(TrackAlreadyExistsException.class);
+    public void givenMethodWillTestForSaveTrackFailure() throws Exception {
+        when(trackService.saveTrack((Track) any())).thenThrow(TrackAlreadyExistsException.class);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/track/")
                 .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
                 .andExpect(MockMvcResultMatchers.status().isConflict())
                 .andDo(MockMvcResultHandlers.print());
+        verify(trackService, times(1)).saveTrack(track);
+
     }
 
     @Test
-    public void getAllTrack() throws Exception {
+    public void givenMethodShouldReturnAllTracks() throws Exception {
         when(trackService.getAllTracks()).thenReturn(list);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/track")
                 .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
+        verify(trackService, times(1)).getAllTracks();
+    }
+
+
+    @Test
+    public void givenMethodShouldUpdateTrack() throws Exception {
+        Track track1 = new Track();
+        track1.setTrack("fgdff");
+        track1.setId(101);
+        track1.setComments("ssjs");
+        when(trackService.updateTrack(101, track1)).thenReturn(track1);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/track")
+                .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+                  verify(trackService, times(1)).updateTrack(11,track1);
+    }
+
+
+    @Test
+    public void givenMethodShouldDeleteTheTrack() throws Exception {
+
+        when(trackService.deleteTrackById(101)).thenReturn("deleted");
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/track")
+                .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+                verify(trackService, times(1)).deleteTrackById(anyInt());
+    }
+
+
+    @Test
+    public void givenIdShouldReturnTrackNotAvailableException() throws TrackNotAvailableException , Exception{
+        when(trackService.deleteTrackById(anyInt())).thenThrow(TrackNotAvailableException.class);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/track/111")
+                .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
+                .andExpect(MockMvcResultMatchers.status().isConflict())
+                .andDo(MockMvcResultHandlers.print());
+             verify(trackService, times(1)).deleteTrackById(anyInt());
+
+    }
+
+    @Test
+    public void givenUrlWithNameShouldReturnServerException() throws TrackNotAvailableException, Exception {
+        when(trackService.getByName(any())).thenThrow(Exception.class);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/track/yedho onnu solluvom")
+                .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andDo(MockMvcResultHandlers.print());
+        verify(trackService, times(1)).getByName(anyString());
+
+    }
+
+    @Test
+    public void givenIdAndTrackShouldReturnTheServerException() throws TrackNotAvailableException, Exception {
+        when(trackService.updateTrack(anyInt(),any())).thenThrow(TrackNotAvailableException.class);
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/track/1414")
+                .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(MockMvcResultHandlers.print());
+                verify(trackService, times(1)).updateTrack(anyInt(),any());
+
+    }
+
+    @Test
+    public void givenIdShouldReturnException() throws Exception{
+        when(trackService.deleteTrackById(5656)).thenThrow(TrackNotAvailableException.class);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/track/111")
+                .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
+                .andExpect(MockMvcResultMatchers.status().isConflict())
+                .andDo(MockMvcResultHandlers.print());
+                verify(trackService, times(1)).deleteTrackById(anyInt());
 
     }
 
 
-    private static String asJsonString(final Object obj) {
+        private static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
 

@@ -1,7 +1,7 @@
 package com.stackroute.trackservice.service;
 
 import com.stackroute.trackservice.domain.Track;
-import com.stackroute.trackservice.exceptions.TrackNotAvailable;
+import com.stackroute.trackservice.exceptions.TrackNotAvailableException;
 import com.stackroute.trackservice.exceptions.TrackAlreadyExistsException;
 import com.stackroute.trackservice.repository.TrackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class TrackServiceImpl implements TrackService {
      * @return this is a track object which has the track of the given id
      */
     @Override
-    public Track getTrackById(int id) throws TrackNotAvailable {
+    public Track getTrackById(int id) throws TrackNotAvailableException {
 
         if(trackRepository.existsById(id)) {
             Track track = trackRepository.findById(id).get();
@@ -63,7 +63,7 @@ public class TrackServiceImpl implements TrackService {
         }
         else
         {
-            throw  new TrackNotAvailable("track not available");
+            throw  new TrackNotAvailableException("track not available");
         }
     }
 
@@ -83,9 +83,9 @@ public class TrackServiceImpl implements TrackService {
      * @return this returns a string message about the deleted track
      */
     @Override
-    public String deleteTrackById(int id) throws TrackNotAvailable {
+    public String deleteTrackById(int id) throws TrackNotAvailableException {
         if(trackRepository.findById(id).isEmpty()) {
-            throw new TrackNotAvailable("track not available");
+            throw new TrackNotAvailableException("track not available");
         }
        Optional<?> optional= trackRepository.findById(id);
        String s=" ";
@@ -104,9 +104,9 @@ public class TrackServiceImpl implements TrackService {
      * @return new track is updated
      */
     @Override
-    public Track updateTrack(int id,Track trackToBeUpdated) throws TrackNotAvailable{
+    public Track updateTrack(int id,Track trackToBeUpdated) throws TrackNotAvailableException {
         if(trackRepository.findById(id).isEmpty()) {
-            throw new TrackNotAvailable("track not available");
+            throw new TrackNotAvailableException("track not available");
         }
         trackRepository.findById(id).get().setTrack(trackToBeUpdated.getTrack());
         trackRepository.findById(id).get().setComments(trackToBeUpdated.getComments());
@@ -115,11 +115,11 @@ public class TrackServiceImpl implements TrackService {
     }
 
     @Override
-    public List<Track> getByName(String name) throws TrackNotAvailable {
+    public List<Track> getByName(String name) throws TrackNotAvailableException {
         List<Track> trackByName=trackRepository.findByTrack(name);
         if(trackByName.isEmpty())
         {
-            throw new TrackNotAvailable("get by name not found");
+            throw new TrackNotAvailableException("get by name not found");
         }
         return trackByName;
     }

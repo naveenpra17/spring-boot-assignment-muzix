@@ -15,8 +15,8 @@ public class GlobalException extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(TrackNotAvailable.class)
-    public ResponseEntity<Object> trackNotAvailable(final TrackNotAvailable ex){
+    @ExceptionHandler(TrackNotAvailableException.class)
+    public ResponseEntity<Object> trackNotAvailable(final TrackNotAvailableException ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
     }
 

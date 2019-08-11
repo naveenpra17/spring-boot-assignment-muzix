@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
@@ -20,9 +21,9 @@ public class TrackRepositoryTest {
 
 
     @Autowired
-    TrackRepository trackRepository;
+   private TrackRepository trackRepository;
 
-    Track track;
+   private  Track track;
 
     @Before
     public void setUp() {
@@ -36,25 +37,26 @@ public class TrackRepositoryTest {
     @After
     public void tearDown() {
         trackRepository.deleteAll();
+        track=null;
     }
 
-
+    //Test for savetrack
     @Test
-    public void testSaveUser() {
+    public void givenMethodWillTestForSavedTrack() {
         Track fetchUser = trackRepository.findById(track.getId()).get();
         Assert.assertEquals(101, fetchUser.getId());
     }
 
     @Test
-    public void testSaveUserFailure() {
+    public void givenMethodWillTestForFailureOfSavingTrack() {
         Track testUser = new Track(10,"John","Jenny");
         trackRepository.save(track);
         Track fetchUser = trackRepository.findById(track.getId()).get();
         Assert.assertNotSame(testUser, track);
     }
-
+    //        Test for getAllTtracks
     @Test
-    public void testGetAllUser() {
+    public void givenMethodWillGetAllTracks() {
         trackRepository.save(track);
         Track u = new Track(11,"karthi","xyz");
         Track u1 = new Track(12,"naveen","dfdf");
@@ -65,6 +67,28 @@ public class TrackRepositoryTest {
         Assert.assertEquals("karthi", list.get(1).getTrack());
 //        Assert.assertEquals("naveen",list.get().getTrack());
     }
+    //        Test for deleteTrack
+    @Test
+    public void GivenTrackIdShouldDeletetrackAndReturnNull() {
+        trackRepository.save(track);
+        trackRepository.delete(track);
+        Optional<Track> expected = Optional.empty();
 
+        Assert.assertEquals(expected, trackRepository.findById(track.getId()));
+    }
+    //        Test for updatingTrack
+    @Test
+    public void GivenTrackWithSameIdShouldUpdatedTrackOfThatId(){
+
+        Track trackToUpdate=new Track();
+        trackRepository.save(track);
+        Track updatedTrack = trackRepository.findById(trackToUpdate.getId()).get();
+        updatedTrack.setTrack(trackToUpdate.getTrack());
+        updatedTrack.setComments(trackToUpdate.getComments());
+        Track expected=trackToUpdate;
+        Track foundTrack=trackRepository.save(trackToUpdate);
+
+        Assert.assertEquals(expected,foundTrack);
+    }
 
 }

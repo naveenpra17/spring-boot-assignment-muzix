@@ -1,7 +1,8 @@
 package com.stackroute.trackservice.service;
 
 import com.stackroute.trackservice.domain.Track;
-import com.stackroute.trackservice.exceptions.TrackNotAvailable;
+import com.stackroute.trackservice.exceptions.TrackNotAvailableException;
+import com.stackroute.trackservice.exceptions.TrackNotAvailableException;
 import com.stackroute.trackservice.exceptions.TrackAlreadyExistsException;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class TrackDummyServiceImpl implements TrackService {
     }
 
     @Override
-    public Track getTrackById(int id) throws TrackNotAvailable {
+    public Track getTrackById(int id) throws TrackNotAvailableException {
         return null;
     }
 
@@ -28,17 +29,17 @@ public class TrackDummyServiceImpl implements TrackService {
     }
 
     @Override
-    public String deleteTrackById(int id) throws TrackNotAvailable {
+    public String deleteTrackById(int id) throws TrackNotAvailableException {
         return null;
     }
 
     @Override
-    public Track updateTrack(int id, Track trackToBeUpdated) throws TrackNotAvailable {
+    public Track updateTrack(int id, Track trackToBeUpdated) throws TrackNotAvailableException {
         return null;
     }
 
     @Override
-    public List<Track> getByName(String name) throws TrackNotAvailable {
+    public List<Track> getByName(String name) throws TrackNotAvailableException {
         return null;
     }
 }

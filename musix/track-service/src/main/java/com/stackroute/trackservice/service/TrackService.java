@@ -1,7 +1,7 @@
 package com.stackroute.trackservice.service;
 
 import com.stackroute.trackservice.domain.Track;
-import com.stackroute.trackservice.exceptions.TrackNotAvailable;
+import com.stackroute.trackservice.exceptions.TrackNotAvailableException;
 import com.stackroute.trackservice.exceptions.TrackAlreadyExistsException;
 
 
@@ -12,10 +12,10 @@ import java.util.List;
  */
 public interface TrackService {
     public Track saveTrack(Track track) throws TrackAlreadyExistsException;
-    public Track getTrackById(int id) throws TrackNotAvailable;
+    public Track getTrackById(int id) throws TrackNotAvailableException;
     public List<Track> getAllTracks();
-    public String deleteTrackById(int id) throws TrackNotAvailable;
-    public Track updateTrack(int id,Track trackToBeUpdated) throws TrackNotAvailable;
-    public List<Track> getByName(String name) throws TrackNotAvailable;
+    public String deleteTrackById(int id) throws TrackNotAvailableException;
+    public Track updateTrack(int id,Track trackToBeUpdated) throws TrackNotAvailableException;
+    public List<Track> getByName(String name) throws TrackNotAvailableException;
 
 }

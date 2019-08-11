@@ -1,7 +1,7 @@
 package com.stackroute.trackservice.controller;
 
 import com.stackroute.trackservice.domain.Track;
-import com.stackroute.trackservice.exceptions.TrackNotAvailable;
+import com.stackroute.trackservice.exceptions.TrackNotAvailableException;
 import com.stackroute.trackservice.exceptions.TrackAlreadyExistsException;
 import com.stackroute.trackservice.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ public class TrackController {
      * @return track with the given id is returned
      */
     @GetMapping("track/{id}")//this for get request
-    public ResponseEntity<?> getTrack(@PathVariable int id) throws TrackNotAvailable {
+    public ResponseEntity<?> getTrack(@PathVariable int id) throws TrackNotAvailableException {
         Track track1;
         ResponseEntity responseEntity;
 //        try{
@@ -93,7 +93,7 @@ public class TrackController {
      * @return//returning the string message based on the deletion
      */
     @DeleteMapping("track/{id}")//this is used for delete request
-    public ResponseEntity<?> deleteById(@PathVariable("id") int id) throws TrackNotAvailable {
+    public ResponseEntity<?> deleteById(@PathVariable("id") int id) throws TrackNotAvailableException {
         ResponseEntity responseEntity;
 //        try{
         String str = trackService.deleteTrackById(id);
@@ -110,7 +110,7 @@ public class TrackController {
      * @return updated tracl
      */
     @PutMapping("track/{id}")
-    public ResponseEntity<?> updateById(@PathVariable int id, @RequestBody Track trackToBeUpdated) throws TrackNotAvailable {
+    public ResponseEntity<?> updateById(@PathVariable int id, @RequestBody Track trackToBeUpdated) throws TrackNotAvailableException {
         ResponseEntity responseEntity;
 //        try{
         Track track = trackService.updateTrack(id, trackToBeUpdated);
@@ -123,7 +123,7 @@ public class TrackController {
     }
 
     @GetMapping("tracks/{name}")
-    public ResponseEntity<?> getByName(@PathVariable String name) throws TrackNotAvailable {
+    public ResponseEntity<?> getByName(@PathVariable String name) throws TrackNotAvailableException {
         List<Track> track = trackService.getByName(name);
         return new ResponseEntity<>(track, HttpStatus.OK);
     }
