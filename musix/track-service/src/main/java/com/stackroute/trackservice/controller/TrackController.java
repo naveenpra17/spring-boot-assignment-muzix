@@ -56,7 +56,7 @@ public class TrackController {
         ResponseEntity responseEntity;
 //        try{
         track1 = trackService.getTrackById(id);
-        responseEntity = new ResponseEntity(track1, HttpStatus.CONFLICT);
+        responseEntity = new ResponseEntity(track1, HttpStatus.NOT_FOUND);
 
 //        }
 //        catch (TrackNotAvailable tx){

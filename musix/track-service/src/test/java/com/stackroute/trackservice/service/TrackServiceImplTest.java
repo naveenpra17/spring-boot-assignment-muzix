@@ -1,4 +1,4 @@
-package com.stackroute.trackservice.service;
+    package com.stackroute.trackservice.service;
 
 import com.stackroute.trackservice.domain.Track;
 import com.stackroute.trackservice.exceptions.ErrorWithConnectingToTheDataBase;
@@ -62,7 +62,7 @@ public class TrackServiceImplTest {
     @Test
     public void givenMethodShouldReturnTheSavedTrack() throws TrackNotAvailableException, TrackAlreadyExistsException, ErrorWithConnectingToTheDataBase {
 
-        when(trackRepository.save((Track) any())).thenReturn(track);
+        when(trackRepository.existsById( anyInt())).thenReturn(true);
         Track savedUser = trackService.saveTrack(track);
         Assert.assertEquals(track, savedUser);
 
@@ -99,7 +99,7 @@ public class TrackServiceImplTest {
     @Test
     public void givenMethodShouldReturnTrackById() throws TrackNotAvailableException {
 
-        when(trackRepository.findById(101)).thenReturn((Optional.of(track)));
+        when(trackRepository.existsById(101)).thenReturn((true));
 
         Track track1 = trackService.getTrackById(101);
         Assert.assertEquals(track, track1);
@@ -131,6 +131,7 @@ public class TrackServiceImplTest {
         Track savedTrack = trackService.updateTrack(101, track1);
         Assert.assertEquals(track1, savedTrack);
         verify(trackRepository, times(1)).findById(anyInt());
+        verify(trackRepository, times(1)).existsById(anyInt());
 
     }
 	//test case for server error
@@ -155,10 +156,12 @@ public class TrackServiceImplTest {
     }
 	//track update failure test case
     @Test(expected = Exception.class)
-    public void givenTrackIdshouldReturnTheServerException() throws TrackAlreadyExistsException, Exception {
+    public void givenTrackIdShouldReturnTheServerException() throws TrackAlreadyExistsException, Exception {
         when(trackRepository.existsById(anyInt())).thenReturn(true);
         when(trackRepository.findById(any())).thenThrow(Exception.class);
         trackService.updateTrack(anyInt(), any());
         verify(trackRepository, times(1)).findById(anyInt());
+        verify(trackRepository, times(1)).existsById(anyInt());
+
     }
 }
